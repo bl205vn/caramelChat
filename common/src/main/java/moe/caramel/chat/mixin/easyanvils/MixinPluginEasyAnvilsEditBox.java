@@ -47,11 +47,15 @@ public abstract class MixinPluginEasyAnvilsEditBox extends EditBox {
     @Inject(method = "setValue", at = @At("HEAD"))
     private void caramelChat$setValueHead(final String text, final CallbackInfo ci) {
         final WrapperEditBox wrapper = EditBoxController.getWrapper((EditBox) (Object) this);
-        if (wrapper != null && wrapper.valueChanged) {
-            // Preview insertion: cache current cursor positions before setValue overwrites
-            // them
-            this.caramelChat$cacheCursorPos = this.cursorPos;
-            this.caramelChat$cacheHighlightPos = this.highlightPos;
+        if (wrapper != null) {
+            if (wrapper.valueChanged) {
+                // Preview insertion: cache current cursor positions before setValue overwrites
+                // them
+                this.caramelChat$cacheCursorPos = this.cursorPos;
+                this.caramelChat$cacheHighlightPos = this.highlightPos;
+            } else {
+                wrapper.setToNoneStatus();
+            }
         }
     }
 
@@ -76,6 +80,14 @@ public abstract class MixinPluginEasyAnvilsEditBox extends EditBox {
     }
 
     // ================================ (insertText hooks)
+
+    @Inject(method = "insertText", at = @At("HEAD"))
+    private void caramelChat$insertTextHead(final String text, final CallbackInfo ci) {
+        final WrapperEditBox wrapper = EditBoxController.getWrapper((EditBox) (Object) this);
+        if (wrapper != null) {
+            wrapper.setToNoneStatus();
+        }
+    }
 
     @Inject(method = "insertText", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lfuzs/easyanvils/client/gui/components/FormattableEditBox;onValueChange(Ljava/lang/String;)V"))
     private void caramelChat$insertTextBeforeOnValueChange(final String text, final CallbackInfo ci) {

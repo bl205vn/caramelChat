@@ -25,27 +25,29 @@ import java.util.function.Predicate;
 @Mixin(value = EditBox.class, priority = 0)
 public abstract class MixinEditBox implements EditBoxController {
 
-    @Unique private WrapperEditBox caramelChat$wrapper;
-    @Unique private int caramelChat$cacheCursorPos, caramelChat$cacheHighlightPos;
-    @Shadow private boolean canLoseFocus;
-    @Shadow public int highlightPos;
-    @Shadow public int cursorPos;
-    @Shadow public String value;
-    @Shadow @Final private List<EditBox.TextFormatter> formatters;
+    @Unique
+    private WrapperEditBox caramelChat$wrapper;
+    @Unique
+    private int caramelChat$cacheCursorPos, caramelChat$cacheHighlightPos;
+    @Shadow
+    private boolean canLoseFocus;
+    @Shadow
+    public int highlightPos;
+    @Shadow
+    public int cursorPos;
+    @Shadow
+    public String value;
+    @Shadow
+    @Final
+    private List<EditBox.TextFormatter> formatters;
 
-    @Redirect(
-        method = "<init>(Lnet/minecraft/client/gui/Font;IIIILnet/minecraft/client/gui/components/EditBox;Lnet/minecraft/network/chat/Component;)V",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/EditBox;setValue(Ljava/lang/String;)V")
-    )
+    @Redirect(method = "<init>(Lnet/minecraft/client/gui/Font;IIIILnet/minecraft/client/gui/components/EditBox;Lnet/minecraft/network/chat/Component;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/EditBox;setValue(Ljava/lang/String;)V"))
     private void init(final EditBox self, final String value) {
         this.caramelChat$wrapper = new WrapperEditBox((EditBox) (Object) this);
         self.setValue(value);
     }
 
-    @Inject(
-        method = "<init>(Lnet/minecraft/client/gui/Font;IIIILnet/minecraft/client/gui/components/EditBox;Lnet/minecraft/network/chat/Component;)V",
-        at = @At("TAIL")
-    )
+    @Inject(method = "<init>(Lnet/minecraft/client/gui/Font;IIIILnet/minecraft/client/gui/components/EditBox;Lnet/minecraft/network/chat/Component;)V", at = @At("TAIL"))
     private void lazyInit(final CallbackInfo ci) {
         if (this.caramelChat$wrapper == null) {
             this.caramelChat$wrapper = new WrapperEditBox((EditBox) (Object) this);
@@ -79,14 +81,17 @@ public abstract class MixinEditBox implements EditBoxController {
                 // FirstPos ex. [ ABCD|EFG}(INPUT)HIJK ]
                 // LastPos ex. [ ABCDEFG(INPUT)HI|JK} ]
                 final int lastPos = (firstPos + original.length()); // firstPos ~ lastPos
-                if (lastPos <= caramelChat$wrapper.getFirstEndPos() || caramelChat$wrapper.getSecondStartPos() < firstPos) {
+                if (lastPos <= caramelChat$wrapper.getFirstEndPos()
+                        || caramelChat$wrapper.getSecondStartPos() <= firstPos) {
                     return null;
                 }
 
                 // Process
-                final int firstLen = (caramelChat$wrapper.getFirstEndPos() - firstPos);
-                final int previewLen = (caramelChat$wrapper.getSecondStartPos() - caramelChat$wrapper.getFirstEndPos());
-                final int inputEndPoint = Math.min(original.length(), (firstLen + previewLen));
+                final int firstLen = Math.max(0,
+                        Math.min(original.length(), caramelChat$wrapper.getFirstEndPos() - firstPos));
+                final int previewLen = Math.max(0,
+                        caramelChat$wrapper.getSecondStartPos() - caramelChat$wrapper.getFirstEndPos());
+                final int inputEndPoint = Math.max(firstLen, Math.min(original.length(), (firstLen + previewLen)));
 
                 final List<FormattedCharSequence> list = new ArrayList<>();
                 final String first = original.substring(0, firstLen);
@@ -114,13 +119,7 @@ public abstract class MixinEditBox implements EditBoxController {
         }
     }
 
-    @Redirect(
-        method = "setValue",
-        at = @At(
-            value = "INVOKE",
-            target = "Ljava/util/function/Predicate;test(Ljava/lang/Object;)Z"
-        )
-    )
+    @Redirect(method = "setValue", at = @At(value = "INVOKE", target = "Ljava/util/function/Predicate;test(Ljava/lang/Object;)Z"))
     private boolean setValuePredicateTest(final Predicate<String> predicate, final Object value) {
         if (this.caramelChat$wrapper != null && this.caramelChat$wrapper.valueChanged) {
             this.caramelChat$cacheCursorPos = this.cursorPos;
@@ -131,13 +130,7 @@ public abstract class MixinEditBox implements EditBoxController {
         return predicate.test((String) value);
     }
 
-    @Inject(
-        method = "setValue",
-        at = @At(
-            value = "INVOKE", shift = At.Shift.BEFORE,
-            target = "Lnet/minecraft/client/gui/components/EditBox;moveCursorToEnd(Z)V"
-        ), cancellable = true
-    )
+    @Inject(method = "setValue", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/client/gui/components/EditBox;moveCursorToEnd(Z)V"), cancellable = true)
     private void setValueInvoke(final String text, final CallbackInfo ci) {
         if (this.caramelChat$wrapper != null && this.caramelChat$wrapper.valueChanged) {
             ci.cancel();
@@ -157,13 +150,7 @@ public abstract class MixinEditBox implements EditBoxController {
         this.caramelChat$setStatusToNone();
     }
 
-    @Inject(
-        method = "insertText",
-        at = @At(
-            value = "INVOKE", shift = At.Shift.BEFORE,
-            target = "Lnet/minecraft/client/gui/components/EditBox;onValueChange(Ljava/lang/String;)V"
-        )
-    )
+    @Inject(method = "insertText", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/client/gui/components/EditBox;onValueChange(Ljava/lang/String;)V"))
     private void insertTextInvoke(final String text, final CallbackInfo ci) {
         this.caramelChat$forceUpdateOrigin();
     }
@@ -175,13 +162,7 @@ public abstract class MixinEditBox implements EditBoxController {
         }
     }
 
-    @Inject(
-        method = "deleteCharsToPos",
-        at = @At(
-            value = "INVOKE", shift = At.Shift.BEFORE,
-            target = "Lnet/minecraft/client/gui/components/EditBox;moveCursorTo(IZ)V"
-        )
-    )
+    @Inject(method = "deleteCharsToPos", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/client/gui/components/EditBox;moveCursorTo(IZ)V"))
     private void deleteChars(final int pos, final CallbackInfo ci) {
         this.caramelChat$wrapper.setOrigin(this.value);
     }
