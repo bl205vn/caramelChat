@@ -55,7 +55,7 @@ public abstract class MixinPluginEasyAnvilsEditBox extends EditBox {
         }
     }
 
-    @Inject(method = "setValue", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/client/gui/components/EditBox;moveCursorToEnd(Z)V"), cancellable = true)
+    @Inject(method = "setValue", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lfuzs/easyanvils/client/gui/components/FormattableEditBox;moveCursorToEnd(Z)V"), cancellable = true)
     private void caramelChat$setValueBeforeMoveCursor(final String text, final CallbackInfo ci) {
         final WrapperEditBox wrapper = EditBoxController.getWrapper((EditBox) (Object) this);
         if (wrapper == null)
@@ -77,7 +77,7 @@ public abstract class MixinPluginEasyAnvilsEditBox extends EditBox {
 
     // ================================ (insertText hooks)
 
-    @Inject(method = "insertText", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/client/gui/components/EditBox;onValueChange(Ljava/lang/String;)V"))
+    @Inject(method = "insertText", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lfuzs/easyanvils/client/gui/components/FormattableEditBox;onValueChange(Ljava/lang/String;)V"))
     private void caramelChat$insertTextBeforeOnValueChange(final String text, final CallbackInfo ci) {
         final WrapperEditBox wrapper = EditBoxController.getWrapper((EditBox) (Object) this);
         if (wrapper != null) {
