@@ -5,6 +5,7 @@ import moe.caramel.chat.wrapper.AbstractIMEWrapper;
 import moe.caramel.chat.wrapper.WrapperEditBox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(RecipeBookComponent.class)
 public abstract class MixinRecipeBookComponent {
 
-    @Shadow private EditBox searchBox;
-    @Shadow protected abstract void checkSearchStringUpdate();
+    @Shadow @Nullable private EditBox searchBox;
+    @Shadow private void checkSearchStringUpdate() { throw new AssertionError(); }
 
     @Inject(method = "initVisuals", at = @At("TAIL"))
     private void initVisuals(final CallbackInfo ci) {

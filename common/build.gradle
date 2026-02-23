@@ -11,6 +11,8 @@ dependencies {
     // Other mods
     modCompileOnly "dev.emi:emi-xplat-intermediary:${emi_version}"
     modCompileOnly "maven.modrinth:xaeros-minimap:${xaeros_minimap_version}"
+    modCompileOnly "maven.modrinth:ixeris:${ixeris_version}"
+    modCompileOnly "maven.modrinth:easy-anvils:${easyanvils_version}"
 }
 
 architectury {

@@ -25,6 +25,11 @@ public final class Compatibilities {
         Set.of("moe.caramel.chat.mixin.xaeromap.MixinPluginXaeroMapWayPoint")
     );
 
+    public static final Data EASY_ANVILS = register(
+        "Easy Anvils", "fuzs.easyanvils.client.gui.components.FormattableEditBox",
+        Set.of("moe.caramel.chat.mixin.easyanvils.MixinPluginEasyAnvilsEditBox")
+    );
+
     // ================================
 
     /**

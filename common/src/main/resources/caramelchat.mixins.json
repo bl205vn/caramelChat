@@ -15,6 +15,7 @@
         "MixinSignEditScreen",
         "emi.MixinPluginEmiPort",
         "emi.MixinPluginEmiSearchWidget",
-        "xaeromap.MixinPluginXaeroMapWayPoint"
+        "xaeromap.MixinPluginXaeroMapWayPoint",
+        "easyanvils.MixinPluginEasyAnvilsEditBox"
     ]
 }
