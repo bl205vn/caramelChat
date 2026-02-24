@@ -15,7 +15,7 @@ public final class WrapperEditBox extends AbstractIMEWrapper {
     public WrapperEditBox(final EditBox box) {
         super(box.value);
         this.wrapped = box;
-        this.insertCallback = () -> {}; // Empty Callback
+        this.insertCallback = () -> {};
     }
 
     @Override
@@ -49,7 +49,11 @@ public final class WrapperEditBox extends AbstractIMEWrapper {
 
         final int start = Math.min(wrapped.cursorPos, wrapped.highlightPos);
         final int end = Math.max(wrapped.cursorPos, wrapped.highlightPos);
-        final int remain = (wrapped.maxLength - wrapped.value.length()) - (start - end);
+
+        final String strippedValue = net.minecraft.ChatFormatting.stripFormatting(wrapped.value);
+        final int valueLength = strippedValue != null ? strippedValue.length() : wrapped.value.length();
+
+        final int remain = (wrapped.maxLength - valueLength) - (start - end);
         return remain <= 0;
     }
 
