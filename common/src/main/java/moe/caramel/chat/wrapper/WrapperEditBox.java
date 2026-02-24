@@ -11,11 +11,16 @@ public final class WrapperEditBox extends AbstractIMEWrapper {
     private final EditBox wrapped;
     private Runnable insertCallback;
     public boolean valueChanged;
+    private java.util.function.ToIntFunction<String> lengthProvider = value -> {
+        final String strippedValue = net.minecraft.ChatFormatting.stripFormatting(value);
+        return strippedValue != null ? strippedValue.length() : value.length();
+    };
 
     public WrapperEditBox(final EditBox box) {
         super(box.value);
         this.wrapped = box;
-        this.insertCallback = () -> {};
+        this.insertCallback = () -> {
+        };
     }
 
     @Override
@@ -50,8 +55,7 @@ public final class WrapperEditBox extends AbstractIMEWrapper {
         final int start = Math.min(wrapped.cursorPos, wrapped.highlightPos);
         final int end = Math.max(wrapped.cursorPos, wrapped.highlightPos);
 
-        final String strippedValue = net.minecraft.ChatFormatting.stripFormatting(wrapped.value);
-        final int valueLength = strippedValue != null ? strippedValue.length() : wrapped.value.length();
+        final int valueLength = this.lengthProvider.applyAsInt(wrapped.value);
 
         final int remain = (wrapped.maxLength - valueLength) - (start - end);
         return remain <= 0;
@@ -87,5 +91,14 @@ public final class WrapperEditBox extends AbstractIMEWrapper {
      */
     public void setInsertCallback(final Runnable callback) {
         this.insertCallback = callback;
+    }
+
+    /**
+     * Sets a custom length provider for input validation.
+     *
+     * @param provider Custom length provider.
+     */
+    public void setLengthProvider(final java.util.function.ToIntFunction<String> provider) {
+        this.lengthProvider = provider;
     }
 }

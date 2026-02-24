@@ -42,6 +42,31 @@ public abstract class MixinPluginEasyAnvilsEditBox extends EditBox {
         super(null, 0, 0, null);
     }
 
+    // ================================ (init / construct)
+
+    @Inject(method = "<init>(Lnet/minecraft/client/gui/Font;IIIILnet/minecraft/client/gui/components/EditBox;Lnet/minecraft/network/chat/Component;)V", at = @At("TAIL"))
+    private void caramelChat$initFormattableEditBox(final CallbackInfo ci) {
+        final WrapperEditBox wrapper = EditBoxController.getWrapper((EditBox) (Object) this);
+        if (wrapper != null) {
+            wrapper.setLengthProvider(value -> {
+                int length = 0;
+                for (int i = 0; i < value.length(); i++) {
+                    if (value.charAt(i) == '\u00A7') {
+                        i++; // bỏ qua ký tự tiếp theo (mã màu)
+                        continue;
+                    }
+                    if (Character.isHighSurrogate(value.charAt(i))
+                            && i + 1 < value.length()
+                            && Character.isLowSurrogate(value.charAt(i + 1))) {
+                        i++; // surrogate pair = 1 ký tự
+                    }
+                    length++;
+                }
+                return length;
+            });
+        }
+    }
+
     // ================================ (setValue hooks)
 
     @Inject(method = "setValue", at = @At("HEAD"))
