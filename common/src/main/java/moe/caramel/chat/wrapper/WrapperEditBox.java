@@ -55,7 +55,7 @@ public final class WrapperEditBox extends AbstractIMEWrapper {
         final int start = Math.min(wrapped.cursorPos, wrapped.highlightPos);
         final int end = Math.max(wrapped.cursorPos, wrapped.highlightPos);
 
-        final int valueLength = this.lengthProvider.applyAsInt(wrapped.value);
+        final int valueLength = this.lengthProvider.applyAsInt(this.origin);
 
         final int remain = (wrapped.maxLength - valueLength) - (start - end);
         return remain <= 0;
