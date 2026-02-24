@@ -69,8 +69,8 @@ public abstract class MixinPluginEasyAnvilsEditBox extends EditBox {
             // During preview: cancel moveCursorToEnd + setHighlightPos + onValueChange,
             // restore cached cursor, clear the flag.
             ci.cancel();
-            this.cursorPos = this.caramelChat$cacheCursorPos;
-            this.highlightPos = this.caramelChat$cacheHighlightPos;
+            this.cursorPos = Mth.clamp(this.caramelChat$cacheCursorPos, 0, this.value.length());
+            this.highlightPos = Mth.clamp(this.caramelChat$cacheHighlightPos, 0, this.value.length());
             this.displayPos = Mth.clamp(this.displayPos, 0, this.value.length());
             wrapper.valueChanged = false;
         } else {
