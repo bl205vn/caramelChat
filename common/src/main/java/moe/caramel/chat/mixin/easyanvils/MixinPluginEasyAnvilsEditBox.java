@@ -70,12 +70,9 @@ public abstract class MixinPluginEasyAnvilsEditBox extends EditBox {
             // restore cached cursor, clear the flag.
             ci.cancel();
 
-            final String strippedValue = net.minecraft.ChatFormatting.stripFormatting(this.value);
-            final int valueLength = strippedValue != null ? strippedValue.length() : this.value.length();
-
-            this.cursorPos = Mth.clamp(this.caramelChat$cacheCursorPos, 0, valueLength);
-            this.highlightPos = Mth.clamp(this.caramelChat$cacheHighlightPos, 0, valueLength);
-            this.displayPos = Mth.clamp(this.displayPos, 0, valueLength);
+            this.cursorPos = Mth.clamp(this.caramelChat$cacheCursorPos, 0, this.value.length());
+            this.highlightPos = Mth.clamp(this.caramelChat$cacheHighlightPos, 0, this.value.length());
+            this.displayPos = Mth.clamp(this.displayPos, 0, this.value.length());
             wrapper.valueChanged = false;
         } else {
             // Normal setValue: update origin before onValueChange fires
