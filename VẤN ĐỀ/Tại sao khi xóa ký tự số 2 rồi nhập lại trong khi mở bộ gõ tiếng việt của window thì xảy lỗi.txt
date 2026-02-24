@@ -1,0 +1,10 @@
+Tại sao khi xóa ký tự số 2 rồi nhập lại trong khi mở bộ gõ tiếng việt của window thì xảy lỗi????
+Coi ảnh: Lỗi để biết thêm
+Chi tiết lỗi: 
+1. Khi viết thông thường từ trái sang phải và copy § thì không có hiện tượng lỗi.
+2. Copy § rồi nhập 2 và copy TiếngViệtLàmộtNgônNgữTuyệtVờiVàRấtĐaDạngVềSắcThái, không lỗi ký tự sau đó thành §2TiếngViệtLàmộtNgônNgữTuyệtVờiVàRấtĐaDạngVềSắcThái§r
+3. Copy § rồi nhập 2 rồi copy § rồi nhập l và copy TiếngViệtLàmộtNgônNgữTuyệtVờiVàRấtĐaDạngVềSắcThái, không lỗi ký tự sau đó thành §2§lTiếngViệtLàmộtNgônNgữTuyệtVờiVàRấtĐaDạngVềSắcThái§r
+4. Giữ nguyên §2§lTiếngViệtLàmộtNgônNgữTuyệtVờiVàRấtĐaDạngVềSắcThái§r rồi trỏ chuột về §l xóa hết từ l rồi copy và nhập lại, nhận thấy sau khi nhập số hoặc chữ và người dùng nhấn phím mũi tên thì trỏ chuột đang trong IME preview thoát ra và chuyển 2 ký tự (có vẻ đây là bình thường),những nhấn cách thì cũng tương tự vậy, không có lỗi gì vẫn là §2§lTiếngViệtLàmộtNgônNgữTuyệtVờiVàRấtĐaDạngVềSắcThái§r
+5. Giữ nguyên §2§lTiếngViệtLàmộtNgônNgữTuyệtVờiVàRấtĐaDạngVềSắcThái§r rồi trỏ chuột về 2 xóa hết từ 2 rồi copy và nhập lại, xuất hiện lỗi sau khi copy § và nhập số hoặc chữ cái là cảnh báo đỏ cũng như khi nhấn phím mũi tên thì con trỏ chuyển sang kí tự § bên phải và làm mất số hay chữ, với phím cách cũng tương tự nhưng có khoảng trắng, lỗi khi nhấn phím mũi tên sẽ thành §§nTiếngViệtLàmộtNgônNgữTuyệtVờiVàRấtĐaDạngVềSắcThái§r còn lỗi khi nhấn phím cách sẽ thành § §nTiếngViệtLàmộtNgônNgữTuyệtVờiVàRấtĐaDạngVềSắcThái§r và chuyển trạng thái từ đỏ thành trắng (bình thường)
+6. Lỗi trên chỉ xuất hiện khi đầy 50 ký tự, test lại với chuỗi ký tự §5§nTiếngViệtLàmộtNgônNgữTuyệtVờiVàRấtĐaDạngVềSắc§r, Khi xóa 5 và nhập lại rồi nhấn phím mũi tên thì không có lỗi đã nếu trước đó 
+Ký tự được dùng khi test: §2§nTiếngViệtLàmộtNgônNgữTuyệtVờiVàRấtĐaDạngVềSắcThái§r
